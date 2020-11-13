@@ -1,3 +1,5 @@
 module.exports = {
-  lintOnSave: false
+  devServer: {
+    proxy: 'https://northwind-express-api.herokuapp.com'
+  }
 };
