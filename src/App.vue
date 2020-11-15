@@ -8,12 +8,12 @@
 </template>
 
 <style>
-@import "~buefy/dist/buefy.min.css";
+@import '~buefy/dist/buefy.min.css';
 </style>
 
 <style scoped>
-  header {
-    background: #eaeaea;
-    margin-bottom: 20px;
-  }
+header {
+  background: #eaeaea;
+  margin-bottom: 20px;
+}
 </style>

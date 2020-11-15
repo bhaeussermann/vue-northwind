@@ -1,12 +1,16 @@
 import Vue from 'vue';
 import VueRouter, { RouteConfig } from 'vue-router';
-import Employees from '../views/employees.vue';
+import Employees from '../views/employees/employees.vue';
 
 Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
   {
     path: '/',
+    redirect: '/employees'
+  },
+  {
+    path: '/employees',
     name: 'Employees',
     component: Employees
   }

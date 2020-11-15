@@ -1,0 +1,16 @@
+.title-row {
+  display: flex;
+
+  .title {
+    flex-grow: 1;
+  }
+
+  .search {
+      height: 20px;
+      width: 250px;
+
+      .input {
+        border-radius: 0.8rem;
+      }
+  }
+}
