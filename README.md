@@ -1,24 +1,28 @@
-# vue-northwind-2
+# Northwind
+
+This is a simple CRUD application for managing the Employees in a standard Northwind database.
+
+The application interfaces with a [REST service hosted via Express in Node.js](https://github.com/bhaeussermann/northwind-api).
+
+It connects to where the API is hosted [here](https://northwind-express-api.herokuapp.com/swagger/) by default, but this can be changed
+in `vue.config.js` if you're hosting the API yourself.
 
 ## Project setup
 ```
-yarn install
+npm install
 ```
 
 ### Compiles and hot-reloads for development
 ```
-yarn serve
+npm start
 ```
 
 ### Compiles and minifies for production
 ```
-yarn build
+npm run build
 ```
 
 ### Lints and fixes files
 ```
-yarn lint
+npm run lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
