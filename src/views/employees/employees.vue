@@ -1,12 +1,13 @@
 <template>
   <div class="container">
+    <b-loading :isFullPage="true" v-model="isLoading"></b-loading>
     <div class="title-row">
       <h1 class="title is-4">Employees</h1>
       <b-field class="search">
         <b-input placeholder="Search" v-model="searchString"></b-input>
       </b-field>
     </div>
-    <b-table :data="filteredEmployees" default-sort="firstName">
+    <b-table v-if="didLoad" :data="filteredEmployees" default-sort="firstName">
       <b-table-column
         field="firstName"
         label="First Name"

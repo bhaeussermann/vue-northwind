@@ -5,6 +5,8 @@ import { Component, Vue } from 'vue-property-decorator';
 export default class Employees extends Vue {
   private employees: Employee[] = [];
   private filteredEmployees: Employee[] = [];
+  private isLoading = false;
+  private didLoad = false;
 
   private get searchString(): string {
     return this._searchString;
@@ -16,9 +18,20 @@ export default class Employees extends Vue {
   private _searchString = '';
 
   async mounted() {
-    const response = await fetch('/employees');
-    this.employees = await response.json();
-    this.refreshFilteredEmployees();
+    this.isLoading = true;
+    try {
+      this.employees = await this.runApiRequest('/employees');
+      this.refreshFilteredEmployees();
+      this.didLoad = true;
+    } catch (error) {
+      this.$buefy.toast.open({
+        type: 'is-danger',
+        message: 'Error fetching employees: ' + error.message,
+        duration: 5000
+      })
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   private refreshFilteredEmployees() {
@@ -30,5 +43,11 @@ export default class Employees extends Vue {
         e.title.toLowerCase().includes(this._searchString.toLowerCase())
       );
     });
+  }
+
+  private async runApiRequest(requestInfo: RequestInfo) {
+    const response = await fetch(requestInfo);
+    if (response.status !== 200) throw new Error(await response.text());
+    return await response.json();
   }
 }
