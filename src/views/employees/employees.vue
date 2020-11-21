@@ -7,15 +7,9 @@
         <b-input placeholder="Search" v-model="searchString"></b-input>
       </b-field>
     </div>
-    <b-table v-if="didLoad" :data="filteredEmployees" default-sort="firstName">
-      <b-table-column
-        field="firstName"
-        label="First Name"
-        sortable
-        v-slot="props"
-      >
-        {{ props.row.firstName }}
-      </b-table-column>
+    <b-button @click="addEmployee">Add</b-button>
+
+    <b-table v-if="didLoad" :data="filteredEmployees" default-sort="lastName">
       <b-table-column
         field="lastName"
         label="Last Name"
@@ -23,6 +17,14 @@
         v-slot="props"
       >
         {{ props.row.lastName }}
+      </b-table-column>
+      <b-table-column
+        field="firstName"
+        label="First Name"
+        sortable
+        v-slot="props"
+      >
+        {{ props.row.firstName }}
       </b-table-column>
       <b-table-column field="title" label="Title" sortable v-slot="props">
         {{ props.row.title }}

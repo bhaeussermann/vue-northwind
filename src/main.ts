@@ -3,17 +3,30 @@ import Buefy from 'buefy';
 import App from './app.vue';
 import router from './router';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faArrowUp } from '@fortawesome/free-solid-svg-icons';
+import { faArrowUp, faArrowLeft, faArrowRight, faExclamationCircle, faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 Vue.config.productionTip = false;
 
-library.add(faArrowUp);
-Vue.component('vue-fontawesome', FontAwesomeIcon);
+library.add(faArrowUp, faArrowLeft, faArrowRight, faExclamationCircle, faCalendar);
+Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.use(Buefy, {
-  defaultIconComponent: 'vue-fontawesome',
+  defaultIconComponent: 'font-awesome-icon',
   defaultIconPack: 'fas'
+});
+
+Vue.directive('focus', {
+  inserted: function(e) {
+    let inputElement = e;
+    if (e.tagName !== 'INPUT') {
+      const inputDescendants = e.getElementsByTagName('input');
+      if (!inputDescendants.length) return;
+      inputElement = inputDescendants[0];
+    }
+
+    inputElement.focus();
+  }
 });
 
 new Vue({

@@ -18,6 +18,7 @@ export default class Employees extends Vue {
   private _searchString = '';
 
   async mounted() {
+    document.title = 'Employees';
     this.isLoading = true;
     try {
       this.employees = await this.runApiRequest('/employees');
@@ -28,10 +29,15 @@ export default class Employees extends Vue {
         type: 'is-danger',
         message: 'Error fetching employees: ' + error.message,
         duration: 5000
-      })
+      });
+      throw error;
     } finally {
       this.isLoading = false;
     }
+  }
+
+  addEmployee() {
+    this.$router.push({ name: 'add-employee' });
   }
 
   private refreshFilteredEmployees() {
