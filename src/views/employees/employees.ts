@@ -1,4 +1,7 @@
+import { Dependencies } from '@/decorators/dependencies';
 import { Employee } from '@/models/employee';
+import { EmployeesService } from '@/services/employees-service';
+import { MyService } from '@/services/my-service';
 import { Component, Vue } from 'vue-property-decorator';
 
 @Component
@@ -17,11 +20,13 @@ export default class Employees extends Vue {
   }
   private _searchString = '';
 
+  @Dependencies() employeesService!: EmployeesService;
+
   async mounted() {
     document.title = 'Employees';
     this.isLoading = true;
     try {
-      this.employees = await this.runApiRequest('/employees');
+      this.employees = await this.employeesService.getEmployees();
       this.refreshFilteredEmployees();
       this.didLoad = true;
     } catch (error) {
@@ -49,11 +54,5 @@ export default class Employees extends Vue {
         e.title.toLowerCase().includes(this._searchString.toLowerCase())
       );
     });
-  }
-
-  private async runApiRequest(requestInfo: RequestInfo) {
-    const response = await fetch(requestInfo);
-    if (response.status !== 200) throw new Error(await response.text());
-    return await response.json();
   }
 }

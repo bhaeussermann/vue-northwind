@@ -1,4 +1,6 @@
+import { Dependencies } from '@/decorators/dependencies';
 import { Employee } from '@/models/employee';
+import { EmployeesService } from '@/services/employees-service';
 import { Component, Vue } from 'vue-property-decorator';
 
 @Component
@@ -11,6 +13,8 @@ export default class EditEmployee extends Vue {
     birthDate: null
   };
 
+  @Dependencies() employeesService!: EmployeesService;
+
   mounted() {
     document.title = 'Add Employee';
   }
@@ -19,11 +23,7 @@ export default class EditEmployee extends Vue {
     try {
       this.adjustBirthDate();
       this.isSaving = true;
-      await this.runApiRequest('/employees', {
-        method: 'post',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(this.employee)
-      });
+      await this.employeesService.addEmployee(this.employee);
     } catch (error) {
       this.$buefy.toast.open({
         type: 'is-danger',
@@ -53,11 +53,5 @@ export default class EditEmployee extends Vue {
     const birthDate = this.employee.birthDate as Date;
     if (!birthDate) return;
     birthDate.setTime(birthDate.getTime() - birthDate.getTimezoneOffset() * 60 * 1000);
-  }
-
-  private async runApiRequest(requestInfo: RequestInfo, requestInit?: RequestInit) {
-    const response = await fetch(requestInfo, requestInit);
-    if (response.status !== 200) throw new Error(await response.text());
-    return await response.json();
   }
 }

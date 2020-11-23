@@ -5,6 +5,8 @@ import router from './router';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faArrowUp, faArrowLeft, faArrowRight, faExclamationCircle, faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { EmployeesService } from './services/employees-service';
+const injector = require('vue-inject');
 
 Vue.config.productionTip = false;
 
@@ -15,6 +17,8 @@ Vue.use(Buefy, {
   defaultIconComponent: 'font-awesome-icon',
   defaultIconPack: 'fas'
 });
+
+Vue.use(injector);
 
 Vue.directive('focus', {
   inserted: function(e) {
@@ -28,6 +32,8 @@ Vue.directive('focus', {
     inputElement.focus();
   }
 });
+
+injector.service('employeesService', EmployeesService);
 
 new Vue({
   router,

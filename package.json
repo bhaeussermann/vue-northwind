@@ -36,6 +36,7 @@
     "prettier": "^1.19.1",
     "sass-loader": "^8.0.2",
     "typescript": "~3.9.3",
+    "vue-inject": "^2.1.1",
     "vue-template-compiler": "^2.6.11"
   }
 }
