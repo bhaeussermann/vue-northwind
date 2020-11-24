@@ -10,6 +10,7 @@ export default class Employees extends Vue {
   private filteredEmployees: Employee[] = [];
   private isLoading = false;
   private didLoad = false;
+  private isBusy = false;
 
   private get searchString(): string {
     return this._searchString;
@@ -25,6 +26,43 @@ export default class Employees extends Vue {
 
   async mounted() {
     document.title = 'Employees';
+    await this.loadEmployees();
+  }
+
+  addEmployee() {
+    this.$router.push({ name: 'add-employee' });
+  }
+
+  editEmployee(employee: Employee) {
+    this.$router.push({ name: 'edit-employee', params: { employeeId: employee.id as string } });
+  }
+
+  confirmDeleteEmployee(employee: Employee) {
+    this.$buefy.dialog.confirm({
+      title: 'Delete employee',
+      message: `Are you sure you want to delete employee<br /><strong>${employee.firstName} ${employee.lastName}</strong>?`,
+      type: 'is-danger',
+      hasIcon: true,
+      onConfirm: () => this.deleteEmployee(employee)
+    })
+  }
+
+  private async deleteEmployee(employee: Employee) {
+    this.isBusy = true;
+    try {
+      await this.employeesService.deleteEmployee(employee);
+    } catch (error) {
+      this.errorService.reportError('deleting employee', error);
+      throw error;
+    } finally {
+      this.isBusy = false;
+    }
+
+    this.loadEmployees();
+  }
+
+  private async loadEmployees() {
+    this.didLoad = false;
     this.isLoading = true;
     try {
       this.employees = await this.employeesService.getEmployees();
@@ -36,14 +74,6 @@ export default class Employees extends Vue {
     } finally {
       this.isLoading = false;
     }
-  }
-
-  addEmployee() {
-    this.$router.push({ name: 'add-employee' });
-  }
-
-  editEmployee(employeeId: string) {
-    this.$router.push({ name: 'edit-employee', params: { employeeId } });
   }
 
   private refreshFilteredEmployees() {

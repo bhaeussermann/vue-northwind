@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <b-loading :isFullPage="true" v-model="isBusy"></b-loading>
     <div class="title-row">
       <h1 class="title is-4">Employees</h1>
       <b-field class="search">
@@ -37,7 +38,10 @@
         >{{ props.row.title }}</b-table-column>
       <b-table-column
         v-slot="props"
-        ><a @click="{{ editEmployee(props.row.id) }}">Edit</a></b-table-column>
+        ><a @click="{{ editEmployee(props.row) }}">Edit</a></b-table-column>
+      <b-table-column
+        v-slot="props"
+        ><a @click="{{ confirmDeleteEmployee(props.row) }}">Delete</a></b-table-column>
     </b-table>
   </div>
 </template>

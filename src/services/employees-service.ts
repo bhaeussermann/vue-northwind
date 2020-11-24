@@ -29,6 +29,10 @@ export class EmployeesService {
     });
   }
 
+  async deleteEmployee(employee: Employee): Promise<void> {
+    await this.runApiRequest('/employees/' + employee.id, { method: 'delete' });
+  }
+
   private async runApiRequestGetResponse<T>(requestInfo: RequestInfo, requestInit?: RequestInit): Promise<T> {
     const response = await this.runApiRequest(requestInfo, requestInit);
     return await response.json() as T;
