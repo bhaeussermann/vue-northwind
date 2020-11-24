@@ -1,7 +1,7 @@
 import { Dependencies } from '@/decorators/dependencies';
 import { Employee } from '@/models/employee';
 import { EmployeesService } from '@/services/employees-service';
-import { MyService } from '@/services/my-service';
+import { ErrorService } from '@/services/error-service';
 import { Component, Vue } from 'vue-property-decorator';
 
 @Component
@@ -20,6 +20,7 @@ export default class Employees extends Vue {
   }
   private _searchString = '';
 
+  @Dependencies() errorService!: ErrorService;
   @Dependencies() employeesService!: EmployeesService;
 
   async mounted() {
@@ -30,11 +31,7 @@ export default class Employees extends Vue {
       this.refreshFilteredEmployees();
       this.didLoad = true;
     } catch (error) {
-      this.$buefy.toast.open({
-        type: 'is-danger',
-        message: 'Error fetching employees: ' + error.message,
-        duration: 5000
-      });
+      this.errorService.reportError('fetching employees', error);
       throw error;
     } finally {
       this.isLoading = false;
@@ -43,6 +40,10 @@ export default class Employees extends Vue {
 
   addEmployee() {
     this.$router.push({ name: 'add-employee' });
+  }
+
+  editEmployee(employeeId: string) {
+    this.$router.push({ name: 'edit-employee', params: { employeeId } });
   }
 
   private refreshFilteredEmployees() {

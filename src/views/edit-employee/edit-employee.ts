@@ -1,11 +1,18 @@
 import { Dependencies } from '@/decorators/dependencies';
 import { Employee } from '@/models/employee';
 import { EmployeesService } from '@/services/employees-service';
+import { ErrorService } from '@/services/error-service';
 import { Component, Vue } from 'vue-property-decorator';
 
 @Component
 export default class EditEmployee extends Vue {
+  private isLoading = false;
+  private didLoad = false;
+  private didFailLoading = false;
   private isSaving = false;
+  
+  private isEditing = false;
+
   private employee: Employee = {
     firstName: '',
     lastName: '',
@@ -13,23 +20,43 @@ export default class EditEmployee extends Vue {
     birthDate: null
   };
 
+  @Dependencies() errorService!: ErrorService;
   @Dependencies() employeesService!: EmployeesService;
 
-  mounted() {
-    document.title = 'Add Employee';
+  async mounted() {
+    const employeeId: string = this.$route.params.employeeId;
+    this.isEditing = !!employeeId;
+
+    if (!this.isEditing) {
+      document.title = 'Add Employee';
+      this.didLoad = true;
+    } else {
+      document.title = 'Edit Employee';
+      this.isLoading = true;
+      try {
+        this.employee = await this.employeesService.getEmployee(employeeId);
+        this.didLoad = true;
+      } catch (error) {
+        this.didFailLoading = true;
+        this.errorService.reportError('loading employee', error);
+        throw error;
+      } finally {
+        this.isLoading = false;
+      }
+    }
   }
 
   private async save() {
     try {
       this.adjustBirthDate();
       this.isSaving = true;
-      await this.employeesService.addEmployee(this.employee);
+      if (this.isEditing) {
+        await this.employeesService.updateEmployee(this.employee);
+      } else {
+        await this.employeesService.addEmployee(this.employee);
+      }
     } catch (error) {
-      this.$buefy.toast.open({
-        type: 'is-danger',
-        message: 'Error saving employee: ' + error.message,
-        duration: 5000
-      });
+      this.errorService.reportError('saving employee', error);
       throw error;
     } finally {
       this.isSaving = false;

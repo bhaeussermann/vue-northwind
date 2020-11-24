@@ -22,6 +22,11 @@ const routes: Array<RouteConfig> = [
     component: EditEmployee
   },
   {
+    path: '/employees/:employeeId',
+    name: 'edit-employee',
+    component: EditEmployee
+  },
+  {
     path: '*',
     name: 'not-found',
     component: NotFound

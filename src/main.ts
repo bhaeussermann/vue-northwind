@@ -3,14 +3,15 @@ import Buefy from 'buefy';
 import App from './app.vue';
 import router from './router';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faArrowUp, faArrowLeft, faArrowRight, faExclamationCircle, faCalendar } from '@fortawesome/free-solid-svg-icons';
+import { faArrowUp, faArrowLeft, faArrowRight, faExclamationCircle, faExclamationTriangle, faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { EmployeesService } from './services/employees-service';
+import { ErrorService } from './services/error-service';
 const injector = require('vue-inject');
 
 Vue.config.productionTip = false;
 
-library.add(faArrowUp, faArrowLeft, faArrowRight, faExclamationCircle, faCalendar);
+library.add(faArrowUp, faArrowLeft, faArrowRight, faExclamationCircle, faExclamationTriangle, faCalendar);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.use(Buefy, {
@@ -33,6 +34,7 @@ Vue.directive('focus', {
   }
 });
 
+injector.service('errorService', ErrorService);
 injector.service('employeesService', EmployeesService);
 
 new Vue({
