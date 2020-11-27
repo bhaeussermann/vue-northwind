@@ -33,13 +33,13 @@ export class EmployeesService {
     await this.runApiRequest('/employees/' + employee.id, { method: 'delete' });
   }
 
-  private async runApiRequestGetResponse<T>(requestInfo: RequestInfo, requestInit?: RequestInit): Promise<T> {
-    const response = await this.runApiRequest(requestInfo, requestInit);
+  private async runApiRequestGetResponse<T>(path: string, requestInit?: RequestInit): Promise<T> {
+    const response = await this.runApiRequest(path, requestInit);
     return await response.json() as T;
   }
 
-  private async runApiRequest(requestInfo: RequestInfo, requestInit?: RequestInit): Promise<Response> {
-    const response = await fetch(requestInfo, requestInit);
+  private async runApiRequest(path: string, requestInit?: RequestInit): Promise<Response> {
+    const response = await fetch('/api' + path, requestInit);
     if (response.status !== 200) throw new Error(await response.text());
     return response;
   }
