@@ -16,7 +16,6 @@ export class EmployeesService {
   async addEmployee(employee: Employee): Promise<void> {
     await this.runApiRequest('/employees', {
       method: 'post',
-      headers: { 'content-type': 'application/json' },
       body: JSON.stringify(employee)
     });
   }
@@ -24,7 +23,6 @@ export class EmployeesService {
   async updateEmployee(employee: Employee): Promise<void> {
     await this.runApiRequest('/employees/' + employee.id, {
       method: 'put',
-      headers: { 'content-type': 'application/json' },
       body: JSON.stringify(employee)
     });
   }
@@ -38,7 +36,12 @@ export class EmployeesService {
     return await response.json() as T;
   }
 
-  private async runApiRequest(path: string, requestInit?: RequestInit): Promise<Response> {
+  private async runApiRequest(path: string, requestInit: RequestInit = {}): Promise<Response> {
+    const headers = new Headers(requestInit.headers);
+    if (!headers.has('content-type')) headers.set('content-type', 'application/json');
+    if (!headers.has('accept')) headers.set('accept', 'application/json');
+    requestInit.headers = headers;
+
     const response = await fetch('/api' + path, requestInit);
     if (response.status !== 200) throw new Error(await response.text());
     return response;
