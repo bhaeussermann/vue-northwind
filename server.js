@@ -11,7 +11,6 @@ app.use(history());
 app.use(bodyParser.json());
 
 app.use('/', express.static(path.join(__dirname, 'dist')));
-app.get('/', (_req, res) => res.sendFile(path.join(__dirname, 'dist/index.html')));
 
 app.all('/api/*', function(req, res) {
   request('https://northwind-express-api.herokuapp.com' + req.url.substring(4), 
