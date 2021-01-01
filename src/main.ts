@@ -1,10 +1,12 @@
 import Vue from 'vue';
-import Buefy from 'buefy';
 import App from './app.vue';
 import router from './router';
+import Buefy from 'buefy';
+import 'buefy/dist/buefy.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faArrowUp, faArrowLeft, faArrowRight, faExclamationCircle, faExclamationTriangle, faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
 import { EmployeesService } from './services/employees-service';
 import { ErrorService } from './services/error-service';
 const injector = require('vue-inject');
@@ -15,8 +17,8 @@ library.add(faArrowUp, faArrowLeft, faArrowRight, faExclamationCircle, faExclama
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.use(Buefy, {
-  defaultIconComponent: 'font-awesome-icon',
-  defaultIconPack: 'fas'
+  defaultIconPack: 'fas',
+  defaultIconComponent: 'font-awesome-icon'
 });
 
 Vue.use(injector);

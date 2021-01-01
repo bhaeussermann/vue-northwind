@@ -7,10 +7,6 @@
   </div>
 </template>
 
-<style>
-@import '~buefy/dist/buefy.min.css';
-</style>
-
 <style scoped>
 header {
   background: #eaeaea;
