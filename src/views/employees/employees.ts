@@ -11,6 +11,8 @@ export default class Employees extends Vue {
   private isLoading = false;
   private didLoad = false;
   private isBusy = false;
+  private displayEditModal = false;
+  private editedEmployeeId?: string = undefined;
 
   private get searchString(): string {
     return this._searchString;
@@ -30,11 +32,17 @@ export default class Employees extends Vue {
   }
 
   addEmployee() {
-    this.$router.push({ name: 'add-employee' });
+    this.editedEmployeeId = undefined;
+    this.displayEditModal = true;
   }
 
   editEmployee(employee: Employee) {
-    this.$router.push({ name: 'edit-employee', params: { employeeId: employee.id as string } });
+    this.editedEmployeeId = employee.id;
+    this.displayEditModal = true;
+  }
+
+  didSave() {
+    this.loadEmployees();
   }
 
   confirmDeleteEmployee(employee: Employee) {

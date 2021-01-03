@@ -2,16 +2,21 @@ import { Dependencies } from '@/decorators/dependencies';
 import { Employee } from '@/models/employee';
 import { EmployeesService } from '@/services/employees-service';
 import { ErrorService } from '@/services/error-service';
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
 export default class EditEmployee extends Vue {
+  @Prop()
+  employeeId!: string;
+
   private isLoading = false;
   private didLoad = false;
   private didFailLoading = false;
   private isSaving = false;
   
-  private isEditing = false;
+  private get isEditing() {
+    return !!this.employeeId;
+  }
 
   private employee: Employee = {
     firstName: '',
@@ -20,21 +25,16 @@ export default class EditEmployee extends Vue {
     birthDate: null
   };
 
-  @Dependencies() errorService!: ErrorService;
-  @Dependencies() employeesService!: EmployeesService;
+  @Dependencies() private errorService!: ErrorService;
+  @Dependencies() private employeesService!: EmployeesService;
 
   async mounted() {
-    const employeeId: string = this.$route.params.employeeId;
-    this.isEditing = !!employeeId;
-
     if (!this.isEditing) {
-      document.title = 'Add Employee';
       this.didLoad = true;
     } else {
-      document.title = 'Edit Employee';
       this.isLoading = true;
       try {
-        this.employee = await this.employeesService.getEmployee(employeeId);
+        this.employee = await this.employeesService.getEmployee(this.employeeId);
         this.didLoad = true;
       } catch (error) {
         this.didFailLoading = true;
@@ -46,7 +46,7 @@ export default class EditEmployee extends Vue {
     }
   }
 
-  private async save() {
+  async save() {
     try {
       this.adjustBirthDate();
       this.isSaving = true;
@@ -62,14 +62,15 @@ export default class EditEmployee extends Vue {
       this.isSaving = false;
     }
 
-    await this.$router.push({ name: 'employees' });
+    this.close();
+    this.$emit('save');
   }
 
-  private cancel() {
-    this.$router.back();
+  close() {
+    (this.$parent as any).close();
   }
 
-  private formatDate(date: Date): string {
+  formatDate(date: Date): string {
     return date.toLocaleDateString('en-ZA', { year: 'numeric', month: 'long', day: 'numeric' });
   }
 

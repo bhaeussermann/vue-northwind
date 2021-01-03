@@ -28,4 +28,5 @@ header {
 @import "~buefy/src/scss/components/_skeleton";
 @import "~buefy/src/scss/components/_table";
 @import "~buefy/src/scss/components/_datepicker";
+@import "~buefy/src/scss/components/_notices";
 </style>

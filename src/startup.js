@@ -9,7 +9,9 @@ import {
   Input,
   Field,
   Datepicker,
+  Toast,
   Dialog,
+  Modal,
   ConfigProgrammatic
 } from 'buefy';
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -18,6 +20,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 import { EmployeesService } from './services/employees-service';
 import { ErrorService } from './services/error-service';
+import EditEmployee from './views/edit-employee/edit-employee.vue';
 const injector = require('vue-inject');
 
 export function initialize() {
@@ -37,7 +40,9 @@ export function initialize() {
   Vue.use(Input);
   Vue.use(Field);
   Vue.use(Datepicker);
+  Vue.use(Toast);
   Vue.use(Dialog);
+  Vue.use(Modal);
 
   Vue.use(injector);
 
@@ -50,12 +55,14 @@ export function initialize() {
         inputElement = inputDescendants[0];
       }
 
-      inputElement.focus();
+      setTimeout(() => inputElement.focus());
     }
   });
 
   injector.service('errorService', ErrorService);
   injector.service('employeesService', EmployeesService);
+
+  Vue.component('edit-employee', EditEmployee);
 
   new Vue({
     router,

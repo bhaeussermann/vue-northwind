@@ -43,6 +43,22 @@
         v-slot="props"
         ><a @click="{{ confirmDeleteEmployee(props.row) }}">Delete</a></b-table-column>
     </b-table>
+
+    <b-modal
+      v-model="displayEditModal"
+      has-modal-card
+      trap-focus
+      :destroy-on-hide="true"
+      aria-role="dialog"
+      aria-modal
+    >
+      <template>
+        <edit-employee 
+          v-bind:employeeId="editedEmployeeId"
+          v-on:save="didSave()"
+          ></edit-employee>
+      </template>
+    </b-modal>
   </div>
 </template>
 <style scoped lang="scss">
