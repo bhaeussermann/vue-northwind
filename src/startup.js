@@ -9,7 +9,8 @@ import {
   Input,
   Field,
   Datepicker,
-  Dialog
+  Dialog,
+  ConfigProgrammatic
 } from 'buefy';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faArrowUp, faArrowLeft, faArrowRight, faExclamationCircle, faExclamationTriangle, faCalendar } from '@fortawesome/free-solid-svg-icons';
@@ -24,13 +25,14 @@ export function initialize() {
 
   library.add(faArrowUp, faArrowLeft, faArrowRight, faExclamationCircle, faExclamationTriangle, faCalendar);
   Vue.component('font-awesome-icon', FontAwesomeIcon);
-
-  Vue.use(Loading);
-  Vue.use(Skeleton);
-  Vue.use(Table, {
+  ConfigProgrammatic.setOptions({
     defaultIconPack: 'fas',
     defaultIconComponent: 'font-awesome-icon'
   });
+
+  Vue.use(Loading);
+  Vue.use(Skeleton);
+  Vue.use(Table);
   Vue.use(Button);
   Vue.use(Input);
   Vue.use(Field);
