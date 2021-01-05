@@ -1,6 +1,6 @@
 <template>
   <v-dialog v-model="show" width="500" scrollable>
-    <form onsubmit="return false" v-on:submit="save">
+    <v-form ref="form">
       <v-card>
         <app-spinner v-if="isSaving"></app-spinner>
 
@@ -14,17 +14,17 @@
               label="First name"
               v-model="employee.firstName"
               v-focus
-              required
+              :rules="[rules.required]"
               ></v-text-field>
             <v-text-field
               label="Last name"
               v-model="employee.lastName"
-              required
+              :rules="[rules.required]"
               ></v-text-field>
             <v-text-field
               label="Title"
               v-model="employee.title"
-              required
+              :rules="[rules.required]"
               ></v-text-field>
             <app-date-picker
               label="Birth date"
@@ -41,11 +41,11 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" type="submit" :disabled="!didLoad">Save</v-btn>
+          <v-btn color="primary" :disabled="!didLoad" @click="save">Save</v-btn>
           <v-btn @click="close">Cancel</v-btn>
         </v-card-actions>
       </v-card>
-    </form>
+    </v-form>
   </v-dialog>
 </template>
 

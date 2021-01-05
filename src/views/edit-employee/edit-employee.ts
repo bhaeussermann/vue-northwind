@@ -14,6 +14,10 @@ export default class EditEmployee extends Vue {
   didLoad = false;
   didFailLoading = false;
   isSaving = false;
+
+  rules = {
+    required: (value: string) => !!value || 'Required.'
+  };
   
   private employee: Employee = {
     firstName: '',
@@ -32,6 +36,8 @@ export default class EditEmployee extends Vue {
   }
 
   async save() {
+    if (!(this.$refs.form as any).validate()) return;
+
     try {
       this.isSaving = true;
       if (this.isEditing) {
