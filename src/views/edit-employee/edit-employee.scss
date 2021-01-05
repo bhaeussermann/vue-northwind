@@ -1,25 +1,7 @@
-.b-skeleton {
-  display: block;
-  height: 40px;
-
-  &:nth-child(odd) {
-    width: 120px;
-  }
-
-  &:nth-child(even) {
-    width: 400px;
-  }
-}
-
 .error-container {
   margin: 20px;
 }
 
 .form-controls {
-  margin-bottom: 20px;
-  max-width: 400px;
-}
-
-.button {
-  margin: 0 10px 20px 0;
+  max-height: 300px;
 }

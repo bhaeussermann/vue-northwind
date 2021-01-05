@@ -2,17 +2,19 @@ import { Dependencies } from '@/decorators/dependencies';
 import { Employee } from '@/models/employee';
 import { EmployeesService } from '@/services/employees-service';
 import { ErrorService } from '@/services/error-service';
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 
 @Component
 export default class EditEmployee extends Vue {
   @Prop()
+  isShown!: boolean;
+  @Prop()
   employeeId!: string;
 
-  private isLoading = false;
-  private didLoad = false;
-  private didFailLoading = false;
-  private isSaving = false;
+  isLoading = false;
+  didLoad = false;
+  didFailLoading = false;
+  isSaving = false;
   
   private get isEditing() {
     return !!this.employeeId;
@@ -29,8 +31,24 @@ export default class EditEmployee extends Vue {
   @Dependencies() private employeesService!: EmployeesService;
 
   async mounted() {
+    await this.initialize();
+  }
+
+  @Watch('isShown')
+  async isShownChanged() {
+    if (this.isShown) await this.initialize();
+  }
+
+  private async initialize() {
+    this.didLoad = false;
     if (!this.isEditing) {
-      this.didLoad = true;
+      this.employee = {
+        firstName: '',
+        lastName: '',
+        title: '',
+        birthDate: null
+      };
+      setTimeout(() => this.didLoad = true);
     } else {
       this.isLoading = true;
       try {
@@ -48,7 +66,6 @@ export default class EditEmployee extends Vue {
 
   async save() {
     try {
-      this.adjustBirthDate();
       this.isSaving = true;
       if (this.isEditing) {
         await this.employeesService.updateEmployee(this.employee);
@@ -62,24 +79,10 @@ export default class EditEmployee extends Vue {
       this.isSaving = false;
     }
 
-    this.close();
     this.$emit('save');
   }
 
   close() {
-    (this.$parent as any).close();
-  }
-
-  formatDate(date: Date): string {
-    return date.toLocaleDateString('en-ZA', { year: 'numeric', month: 'long', day: 'numeric' });
-  }
-
-  private adjustBirthDate() {
-    // The date given by the date-picker is mid-night in local time, while the time-zone is set to UTC.
-    // This will cause the date portion to shift to the previous day if the local time-zone is GMT+xx
-    // Account for this by changing the date to mid-night in UTC.
-    const birthDate = this.employee.birthDate as Date;
-    if (!birthDate) return;
-    birthDate.setTime(birthDate.getTime() - birthDate.getTimezoneOffset() * 60 * 1000);
+    this.$emit('close');
   }
 }

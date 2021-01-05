@@ -1,20 +1,17 @@
 .title-row {
   display: flex;
+  align-items: center;
+  height: 50px;
 
   .title {
     flex-grow: 1;
   }
 
   .search {
-      height: 20px;
-      width: 250px;
-
-      .input {
-        border-radius: 0.8rem;
-      }
+      max-width: 250px;
   }
 }
 
-.b-skeleton {
-  margin-top: 30px;
+.add-button {
+  margin: 20px 0;
 }

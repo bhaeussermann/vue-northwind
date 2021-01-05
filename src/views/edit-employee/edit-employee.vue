@@ -1,70 +1,54 @@
 <template>
   <form onsubmit="return false" v-on:submit="save">
-    <div class="modal-card">
-      <header class="modal-card-head">
-        <b-loading :isFullPage="true" v-model="isSaving"></b-loading>
-        <p class="modal-card-title">{{ isEditing ? 'Edit' : 'Add' }} Employee</p>
-        <button type="button" class="delete" @click="close()" />
-      </header>
+    <v-card>
+      <app-spinner v-if="isSaving"></app-spinner>
 
-      <section class="modal-card-body">
-        <div v-if="isLoading">
-          <b-skeleton></b-skeleton>
-          <b-skeleton></b-skeleton>
-          <b-skeleton></b-skeleton>
-          <b-skeleton></b-skeleton>
-          <b-skeleton></b-skeleton>
-          <b-skeleton></b-skeleton>
-          <b-skeleton></b-skeleton>
-          <b-skeleton></b-skeleton>
-        </div>
+      <v-card-title>{{ isEditing ? 'Edit' : 'Add' }} Employee</v-card-title>
+
+      <v-card-text>
+        <v-skeleton-loader v-if="isLoading" type="paragraph"></v-skeleton-loader>
 
         <div v-if="didLoad" class="form-controls">
-          <b-field label="First name">
-            <b-input
-              v-model="employee.firstName"
-              v-focus
-              required
-              ></b-input>
-          </b-field>
-          <b-field label="Last name">
-            <b-input
-              v-model="employee.lastName"
-              required
-              ></b-input>
-          </b-field>
-          <b-field label="Title">
-            <b-input
-              v-model="employee.title"
-              required
-              ></b-input>
-          </b-field>
-          <b-field label="Birth date">
-            <b-datepicker
-              v-model="employee.birthDate"
-              :date-formatter="formatDate"
-              icon="calendar"
-              icon-prev="arrow-left"
-              icon-next="arrow-right"
-              editable
-              ></b-datepicker>
-          </b-field>
+          <v-text-field
+            label="First name"
+            v-model="employee.firstName"
+            v-focus
+            required
+            ></v-text-field>
+          <v-text-field
+            label="Last name"
+            v-model="employee.lastName"
+            required
+            ></v-text-field>
+          <v-text-field
+            label="Title"
+            v-model="employee.title"
+            required
+            ></v-text-field>
+          <app-date-picker
+            label="Birth date"
+            v-model="employee.birthDate"
+            ></app-date-picker>
         </div>
 
         <div v-if="didFailLoading" class="error-container">
-          <font-awesome-icon icon="exclamation-triangle" size="5x" />
+          <v-icon x-large>mdi-alert-outline</v-icon>
         </div>
-      </section>
-        
-      <footer class="modal-card-foot">
-        <b-button type="is-primary" native-type="submit" :disabled="!didLoad">Save</b-button>
-        <b-button @click="close">Cancel</b-button>
-      </footer>
-    </div>
+      </v-card-text>
+
+      <v-divider></v-divider>
+
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="primary" type="submit" :disabled="!didLoad">Save</v-btn>
+        <v-btn @click="close">Cancel</v-btn>
+      </v-card-actions>
+    </v-card>
   </form>
 </template>
 
 <style scoped lang="scss">
 @import 'edit-employee.scss';
 </style>
+
 <script src="./edit-employee.ts"></script>

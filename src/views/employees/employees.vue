@@ -1,64 +1,47 @@
 <template>
   <div class="container">
-    <b-loading :isFullPage="true" v-model="isBusy"></b-loading>
+    <app-spinner v-if="isBusy"></app-spinner>
     <div class="title-row">
-      <h1 class="title is-4">Employees</h1>
-      <b-field class="search">
-        <b-input placeholder="Search" v-model="searchString"></b-input>
-      </b-field>
+      <h1 class="title">Employees</h1>
+      <v-text-field
+        class="search"
+        label="Search"
+        v-model="searchString"
+        append-icon="mdi-magnify"
+        single-line
+        ></v-text-field>
     </div>
-    <b-button @click="addEmployee">Add</b-button>
+    
+    <v-btn class="add-button" @click="addEmployee">Add</v-btn>
 
-    <div v-if="isLoading">
-      <b-skeleton></b-skeleton>
-      <b-skeleton></b-skeleton>
-      <b-skeleton></b-skeleton>
-      <b-skeleton></b-skeleton>
-      <b-skeleton></b-skeleton>
-    </div>
+    <v-skeleton-loader v-if="isLoading" type="table-thead,table-tbody"></v-skeleton-loader>
 
-    <b-table v-if="didLoad" :data="filteredEmployees" default-sort="lastName">
-      <b-table-column
-        field="lastName"
-        label="Last Name"
-        sortable
-        v-slot="props"
-        >{{ props.row.lastName }}</b-table-column>
-      <b-table-column
-        field="firstName"
-        label="First Name"
-        sortable
-        v-slot="props"
-        >{{ props.row.firstName }}</b-table-column>
-      <b-table-column
-        field="title"
-        label="Title"
-        sortable
-        v-slot="props"
-        >{{ props.row.title }}</b-table-column>
-      <b-table-column
-        v-slot="props"
-        ><a @click="{{ editEmployee(props.row) }}">Edit</a></b-table-column>
-      <b-table-column
-        v-slot="props"
-        ><a @click="{{ confirmDeleteEmployee(props.row) }}">Delete</a></b-table-column>
-    </b-table>
-
-    <b-modal
-      v-model="displayEditModal"
-      has-modal-card
-      trap-focus
-      :destroy-on-hide="true"
-      aria-role="dialog"
-      aria-modal
-    >
-      <template>
-        <edit-employee 
-          v-bind:employeeId="editedEmployeeId"
-          v-on:save="didSave()"
-          ></edit-employee>
+    <v-data-table
+      v-if="didLoad"
+      :headers="headers"
+      :items="employees"
+      :search="searchString"
+      :disable-pagination="true"
+      :hide-default-footer="true"
+      >
+      <template #[`item.edit-button`]="{ item }">
+        <a @click="{{ editEmployee(item) }}">Edit</a>
       </template>
-    </b-modal>
+      <template #[`item.delete-button`]="{ item }">
+        <a @click="{{ confirmDeleteEmployee(item) }}">Delete</a>
+      </template>
+    </v-data-table>
+
+    <v-dialog v-model="displayEditModal" width="500" scrollable>
+      <app-edit-employee
+        v-bind:isShown="displayEditModal"
+        v-bind:employeeId="editedEmployeeId"
+        v-on:save="modalDidSave()"
+        v-on:close="closeModal()"
+        ></app-edit-employee>
+    </v-dialog>
+
+    <app-dialog ref="dialog"></app-dialog>
   </div>
 </template>
 <style scoped lang="scss">
