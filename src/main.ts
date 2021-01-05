@@ -6,10 +6,11 @@ const injector = require('vue-inject');
 
 import { EmployeesService } from './services/employees-service';
 import { ErrorService } from './services/error-service';
-import Dialog from "./components/dialog/dialog.vue";
+import Dialog from './components/dialog/dialog.vue';
 import Spinner from './components/spinner.vue';
-import DatePicker from "./components/date-picker/date-picker.vue";
+import DatePicker from './components/date-picker/date-picker.vue';
 import EditEmployee from './views/edit-employee/edit-employee.vue';
+import ErrorAlert from './components/error-alert/error-alert.vue';
 
 Vue.config.productionTip = false;
 
@@ -30,6 +31,7 @@ Vue.use(injector);
 injector.service('errorService', ErrorService);
 injector.service('employeesService', EmployeesService);
 
+Vue.component('app-error-alert', ErrorAlert);
 Vue.component('app-dialog', Dialog);
 Vue.component('app-spinner', Spinner);
 Vue.component('app-date-picker', DatePicker);

@@ -6,6 +6,7 @@
     <v-main>
       <v-container fluid>
         <router-view />
+        <app-error-alert></app-error-alert>
       </v-container>
     </v-main>
   </v-app>

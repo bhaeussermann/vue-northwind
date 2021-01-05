@@ -3,7 +3,7 @@
     <v-card>
       <v-card-title class="headline">{{title}}</v-card-title>
       <v-card-text class="body">
-        <v-icon class="icon">mdi-alert-circle</v-icon>
+        <v-icon large class="icon">mdi-alert-circle</v-icon>
         <span class="message" v-html="message"></span>
       </v-card-text>
       <v-divider></v-divider>

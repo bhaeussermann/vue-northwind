@@ -52,7 +52,7 @@ export default class Employees extends Vue {
       try {
         await this.employeesService.deleteEmployee(employee);
       } catch (error) {
-        this.errorService.reportError('deleting employee', error);
+        this.errorService.show('deleting employee', error);
         throw error;
       } finally {
         this.isBusy = false;
@@ -69,7 +69,7 @@ export default class Employees extends Vue {
       this.employees = await this.employeesService.getEmployees();
       this.didLoad = true;
     } catch (error) {
-      this.errorService.reportError('fetching employees', error);
+      this.errorService.show('fetching employees', error);
       throw error;
     } finally {
       this.isLoading = false;

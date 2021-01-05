@@ -16,6 +16,7 @@
     "fetch": "^1.1.0",
     "mdi": "^2.2.43",
     "request": "^2.88.2",
+    "rxjs": "^6.6.3",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",
     "vue-property-decorator": "^8.4.2",

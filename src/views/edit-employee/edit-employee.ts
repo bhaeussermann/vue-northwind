@@ -28,7 +28,7 @@ export default class EditEmployee extends Vue {
   async open(employeeId: string | null = null): Promise<boolean> {
     const promise = new Promise<boolean>(r => this.resolve = r);
     return this.initialize(employeeId)
-      .then(_ => promise, _ => promise);
+      .then(() => promise, () => promise);
   }
 
   async save() {
@@ -40,7 +40,7 @@ export default class EditEmployee extends Vue {
         await this.employeesService.addEmployee(this.employee);
       }
     } catch (error) {
-      this.errorService.reportError('saving employee', error);
+      this.errorService.show('saving employee', error);
       throw error;
     } finally {
       this.isSaving = false;
@@ -75,7 +75,7 @@ export default class EditEmployee extends Vue {
         this.didLoad = true;
       } catch (error) {
         this.didFailLoading = true;
-        this.errorService.reportError('loading employee', error);
+        this.errorService.show('loading employee', error);
         throw error;
       } finally {
         this.isLoading = false;
