@@ -2,24 +2,19 @@ import { Dependencies } from '@/decorators/dependencies';
 import { Employee } from '@/models/employee';
 import { EmployeesService } from '@/services/employees-service';
 import { ErrorService } from '@/services/error-service';
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 
 @Component
 export default class EditEmployee extends Vue {
-  @Prop()
-  isShown!: boolean;
-  @Prop()
-  employeeId!: string;
+  show = false;
+  resolve!: Function;
 
+  isEditing = false;
   isLoading = false;
   didLoad = false;
   didFailLoading = false;
   isSaving = false;
   
-  private get isEditing() {
-    return !!this.employeeId;
-  }
-
   private employee: Employee = {
     firstName: '',
     lastName: '',
@@ -30,38 +25,10 @@ export default class EditEmployee extends Vue {
   @Dependencies() private errorService!: ErrorService;
   @Dependencies() private employeesService!: EmployeesService;
 
-  async mounted() {
-    await this.initialize();
-  }
-
-  @Watch('isShown')
-  async isShownChanged() {
-    if (this.isShown) await this.initialize();
-  }
-
-  private async initialize() {
-    this.didLoad = false;
-    if (!this.isEditing) {
-      this.employee = {
-        firstName: '',
-        lastName: '',
-        title: '',
-        birthDate: null
-      };
-      setTimeout(() => this.didLoad = true);
-    } else {
-      this.isLoading = true;
-      try {
-        this.employee = await this.employeesService.getEmployee(this.employeeId);
-        this.didLoad = true;
-      } catch (error) {
-        this.didFailLoading = true;
-        this.errorService.reportError('loading employee', error);
-        throw error;
-      } finally {
-        this.isLoading = false;
-      }
-    }
+  async open(employeeId: string | null = null): Promise<boolean> {
+    const promise = new Promise<boolean>(r => this.resolve = r);
+    return this.initialize(employeeId)
+      .then(_ => promise, _ => promise);
   }
 
   async save() {
@@ -79,10 +46,40 @@ export default class EditEmployee extends Vue {
       this.isSaving = false;
     }
 
-    this.$emit('save');
+    this.show = false;
+    this.resolve(true);
   }
 
   close() {
-    this.$emit('close');
+    this.show = false;
+    this.resolve(false);
+  }
+
+  private async initialize(employeeId: string | null) {
+    this.isEditing = !!employeeId;
+    this.show = true;
+    this.didLoad = false;
+    
+    if (!this.isEditing) {
+      this.employee = {
+        firstName: '',
+        lastName: '',
+        title: '',
+        birthDate: null
+      };
+      setTimeout(() => this.didLoad = true);
+    } else {
+      this.isLoading = true;
+      try {
+        this.employee = await this.employeesService.getEmployee(employeeId as string);
+        this.didLoad = true;
+      } catch (error) {
+        this.didFailLoading = true;
+        this.errorService.reportError('loading employee', error);
+        throw error;
+      } finally {
+        this.isLoading = false;
+      }
+    }
   }
 }

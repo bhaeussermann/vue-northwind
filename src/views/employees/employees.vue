@@ -32,14 +32,7 @@
       </template>
     </v-data-table>
 
-    <v-dialog v-model="displayEditModal" width="500" scrollable>
-      <app-edit-employee
-        v-bind:isShown="displayEditModal"
-        v-bind:employeeId="editedEmployeeId"
-        v-on:save="modalDidSave()"
-        v-on:close="closeModal()"
-        ></app-edit-employee>
-    </v-dialog>
+    <app-edit-employee ref="editEmployeeDialog"></app-edit-employee>
 
     <app-dialog ref="dialog"></app-dialog>
   </div>

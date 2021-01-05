@@ -4,6 +4,7 @@ import { EmployeesService } from '@/services/employees-service';
 import { ErrorService } from '@/services/error-service';
 import { Component, Vue } from 'vue-property-decorator';
 import { DataTableHeader } from 'vuetify';
+import EditEmployee from "../edit-employee/edit-employee";
 
 @Component
 export default class Employees extends Vue {
@@ -13,10 +14,6 @@ export default class Employees extends Vue {
   isLoading = false;
   didLoad = false;
   isBusy = false;
-
-  displayEditModal = false;
-  editedEmployeeId?: string | null = null;
-  displayConfirmationModal = false;
 
   @Dependencies() errorService!: ErrorService;
   @Dependencies() employeesService!: EmployeesService;
@@ -37,23 +34,16 @@ export default class Employees extends Vue {
     await this.loadEmployees();
   }
 
-  addEmployee() {
-    this.editedEmployeeId = null;
-    this.displayEditModal = true;
+  async addEmployee() {
+    if (await (this.$refs.editEmployeeDialog as EditEmployee).open()) {
+      this.loadEmployees();
+    }
   }
 
-  editEmployee(employee: Employee) {
-    this.editedEmployeeId = employee.id;
-    this.displayEditModal = true;
-  }
-
-  modalDidSave() {
-    this.loadEmployees();
-    this.closeModal();
-  }
-
-  closeModal() {
-    this.displayEditModal = false;
+  async editEmployee(employee: Employee) {
+    if (await (this.$refs.editEmployeeDialog as EditEmployee).open(employee.id)) {
+      this.loadEmployees();
+    }
   }
 
   async confirmDeleteEmployee(employee: Employee) {
