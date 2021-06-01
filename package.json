@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node server.js",
-    "build": "vue-cli-service build",
-    "run": "node server.js",
+    "build": "vue-cli-service build && cp ./server.js ./dist/server.js && cp ./package-prod.json ./dist/package.json",
+    "start": "cd dist && node server.js",
+    "start:dev": "vue-cli-service serve",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {

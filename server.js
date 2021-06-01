@@ -1,4 +1,5 @@
 'use strict';
+
 const express = require('express');
 const history = require('connect-history-api-fallback');
 const bodyParser = require('body-parser');
@@ -10,7 +11,7 @@ const app = express();
 app.use(history());
 app.use(bodyParser.json());
 
-app.use('/', express.static(path.join(__dirname, 'dist')));
+app.use('/', express.static(path.join(__dirname, '.')));
 
 app.all('/api/*', function(req, res) {
   request('https://northwind-express-api.herokuapp.com' + req.url.substring(4), 
