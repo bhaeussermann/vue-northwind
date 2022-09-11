@@ -2,7 +2,7 @@ module.exports = {
   devServer: {
     proxy: {
       '^/api': {
-        target: 'https://northwind-express-api.herokuapp.com',
+        target: 'https://northwind-api-production.up.railway.app',
         pathRewrite: { '^/api' : '' }
       }
     }
