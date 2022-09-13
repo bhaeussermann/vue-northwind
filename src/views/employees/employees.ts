@@ -12,7 +12,7 @@ export default class Employees extends Vue {
   private didLoad = false;
   private isBusy = false;
   private displayEditModal = false;
-  private editedEmployeeId?: string = undefined;
+  private editedEmployeeId: string | null = null;
 
   private get searchString(): string {
     return this._searchString;
@@ -32,12 +32,12 @@ export default class Employees extends Vue {
   }
 
   addEmployee() {
-    this.editedEmployeeId = undefined;
+    this.editedEmployeeId = null;
     this.displayEditModal = true;
   }
 
   editEmployee(employee: Employee) {
-    this.editedEmployeeId = employee.id;
+    this.editedEmployeeId = employee.id ?? null;
     this.displayEditModal = true;
   }
 
@@ -60,7 +60,7 @@ export default class Employees extends Vue {
     try {
       await this.employeesService.deleteEmployee(employee);
     } catch (error) {
-      this.errorService.reportError('deleting employee', error);
+      this.errorService.reportError('deleting employee', error as Error);
       throw error;
     } finally {
       this.isBusy = false;
@@ -77,7 +77,7 @@ export default class Employees extends Vue {
       this.refreshFilteredEmployees();
       this.didLoad = true;
     } catch (error) {
-      this.errorService.reportError('fetching employees', error);
+      this.errorService.reportError('fetching employees', error as Error);
       throw error;
     } finally {
       this.isLoading = false;
