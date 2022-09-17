@@ -13,7 +13,7 @@ app.use(express.json());
 app.use('/', express.static(path.join(__dirname, 'dist')));
 
 app.all('/api/*', function(req, res) {
-  request('https://northwind-api.up.railway.app' + req.url.substring(4), 
+  request('https://northwind-api.onrender.com' + req.url.substring(4),
     {
       method: req.method,
       body: (req.method === 'POST' || req.method === 'PUT') ? JSON.stringify(req.body) : null,
